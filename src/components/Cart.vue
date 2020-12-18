@@ -38,6 +38,12 @@
         </div>
       </li>
     </ul>
+    <button
+      class="w-100 btn mt-2  btn-lg btn-block btn-success"
+      v-if="cart.length"
+    >
+      Checkout ${{ totalPrice }}
+    </button>
   </div>
 </template>
 <script>
@@ -45,6 +51,9 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   computed: {
     ...mapGetters(["cart"]),
+    totalPrice() {
+      return this.cart.reduce((a, b) => a + b.qty * b.price, 0);
+    },
   },
   methods: {
     ...mapActions(["addQty", "reduceQty", "removeItem"]),
