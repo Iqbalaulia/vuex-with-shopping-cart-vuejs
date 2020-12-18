@@ -39,16 +39,28 @@
       </li>
     </ul>
     <button
-      class="w-100 btn mt-2  btn-lg btn-block btn-success"
+      class="w-100 btn mt-2   btn-lg btn-block btn-success"
       v-if="cart.length"
+      :disabled="isProcessing"
+      @click="placeOrder"
     >
-      Checkout ${{ totalPrice }}
+      <span v-if="!isProcessing">Checkout ${{ totalPrice }}</span>
+
+      <div v-else class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
     </button>
   </div>
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
 export default {
+  data() {
+    return {
+      isProcessing: false,
+      orderPlaced: false,
+    };
+  },
   computed: {
     ...mapGetters(["cart"]),
     totalPrice() {
@@ -56,7 +68,15 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["addQty", "reduceQty", "removeItem"]),
+    ...mapActions(["addQty", "reduceQty", "removeItem", "emptyCart"]),
+    placeOrder() {
+      this.isProcessing = true;
+      setTimeout(() => {
+        this.orderPlaced = true;
+        this.isProcessing = false;
+        this.emptyCart();
+      }, 1000);
+    },
   },
 };
 </script>
